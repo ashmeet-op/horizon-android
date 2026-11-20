@@ -7,7 +7,7 @@
      the activity. The libraries are extracted at
      install: the Java launchers that prepare the game files on the phone run from there. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="@APPLICATION_ID@">
+    >
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- The active network's DNS servers, for servers named by an SRV record. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -37,8 +37,7 @@
         <package android:name="dev.horizon.android" />
     </queries>
     <application
-        android:label="@LABEL@"
-        android:icon="@mipmap/ic_launcher"
+        android:label="starling"
         android:hasCode="true"
         android:isGame="true"
         android:appCategory="game"
@@ -49,7 +48,7 @@
             android:name="io.github.juanluci.starling.LauncherActivity"
             android:exported="true"
             android:process=":launcher"
-            android:taskAffinity="@APPLICATION_ID@.launcher"
+            android:taskAffinity="io.github.juanluci.starling"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">

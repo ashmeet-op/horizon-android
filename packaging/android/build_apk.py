@@ -342,11 +342,14 @@ def main():
 
     out = ROOT / "target" / "android"
     out.mkdir(parents=True, exist_ok=True)
-    library = out / f"lib{LIBRARY}.so"
+    abi_dir = out / args.abi
+    abi_dir.mkdir(parents=True, exist_ok=True)
+    library = abi_dir / f"lib{LIBRARY}.so"
     if args.keep_symbols:
         shutil.copyfile(built, library)
     else:
         run(ndk_tool(ndk, "llvm-strip"), "--strip-unneeded", "-o", library, built)
+
     if args.library_only:
         return
     if not args.keep_symbols:

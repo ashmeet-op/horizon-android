@@ -52,15 +52,12 @@ tasks.register('buildRustLib', Exec) {
 }
 
 tasks.matching { it.name == 'bundleReleaseAar' || it.name == 'bundleDebugAar' || it.name.startsWith('merge') }.configureEach {
-    it.dependsOn 'buildRustLib'
 }
 
 tasks.register('makeHorizonAar', Copy) {
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-    from(layout.buildDirectory.dir("outputs/aar"))
-    include '*.aar'
-    into("${rootProject.projectDir}/Hyper_Launcher_v3/libs")
-    rename { String fileName ->
-        return 'libhorizon_android.aar'
+    from(layout.buildDirectory.dir("outputs/aar")) {
+        include '*-release.aar'
     }
+    into file("${rootDir}/Hyper_Launcher_v3/libs")
+    rename { 'libhorizon_android.aar' }
 }
