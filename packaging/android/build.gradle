@@ -56,7 +56,6 @@ tasks.matching { it.name == 'bundleReleaseAar' || it.name == 'bundleDebugAar' ||
 }
 
 tasks.register('makeHorizonAar', Copy) {
-    dependsOn 'assembleRelease'
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from(layout.buildDirectory.dir("outputs/aar"))
     include '*.aar'
