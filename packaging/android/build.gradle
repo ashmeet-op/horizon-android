@@ -1,0 +1,67 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    namespace 'io.github.juanluci.starling'
+    compileSdk {
+        version = release(37) {
+            it.minorApiLevel = 1
+        }
+    }
+
+    defaultConfig {
+        minSdk 26
+        targetSdk 37
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['java']
+            res.srcDirs = ['res']
+            jniLibs.srcDirs = ['../../target/android']
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.annotation:annotation:1.11.0'
+    implementation 'androidx.activity:activity:1.13.0'
+}
+
+tasks.register('buildRustLib', Exec) {
+    description = "Builds the Rust horizon-android native library via cargo-ndk"
+    workingDir file('../../')
+    commandLine 'python3', 'packaging/android/build_apk.py', '--library-only', '--profile', 'quick'
+}
+
+tasks.matching { it.name == 'bundleReleaseAar' || it.name == 'bundleDebugAar' || it.name.startsWith('merge') }.configureEach {
+    it.dependsOn 'buildRustLib'
+}
+
+tasks.register('makeHorizonAar', Copy) {
+    dependsOn 'assembleRelease'
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from(layout.buildDirectory.dir("outputs/aar"))
+    include '*.aar'
+    into("${rootProject.projectDir}/Hyper_Launcher_v3/libs")
+    rename { String fileName ->
+        return 'libhorizon_android.aar'
+    }
+}
